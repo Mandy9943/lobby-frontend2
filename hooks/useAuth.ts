@@ -1,7 +1,6 @@
 "use client";
 
 import { getUser, signIn, signOut } from "@/services/leads-api/auth.services";
-import { useRouter } from "next/navigation";
 import useSWR from "swr";
 
 export interface User {
@@ -27,7 +26,6 @@ export interface User {
 }
 
 export function useAuth() {
-  const router = useRouter();
   const {
     data: user,
     error,
@@ -53,7 +51,6 @@ export function useAuth() {
   const logout = async () => {
     await signOut();
     await mutate(undefined); // Clear the user data in SWR cache
-    router.push("/login");
   };
 
   return {

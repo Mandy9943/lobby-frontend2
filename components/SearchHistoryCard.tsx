@@ -1,14 +1,14 @@
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
-import { Building2, Mail, Phone, Search, Clock } from "lucide-react"
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Building2, Mail, Phone, Search } from "lucide-react";
 
 interface SearchHistoryCardProps {
-  query: string
-  category: string
-  resultsCount: number
-  emailsCount: number
-  phoneCount: number
-  date: string
+  query: string;
+  category: string;
+  resultsCount: number;
+  emailsCount: number;
+  phoneCount: number;
+  date: string;
 }
 
 export function SearchHistoryCard({
@@ -25,7 +25,9 @@ export function SearchHistoryCard({
         <div className="flex flex-col gap-4">
           <div className="flex items-start justify-between">
             <div className="space-y-3">
-              <h3 className="text-xl font-semibold text-slate-900 dark:text-white">{query}</h3>
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
+                {query}
+              </h3>
               <Badge
                 variant="secondary"
                 className="bg-blue-100 hover:bg-blue-200 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
@@ -34,7 +36,9 @@ export function SearchHistoryCard({
                 {category}
               </Badge>
             </div>
-            <span className="text-sm text-slate-500 dark:text-slate-400">{date}</span>
+            <span className="text-sm text-slate-500 dark:text-slate-400">
+              {date}
+            </span>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
@@ -54,6 +58,5 @@ export function SearchHistoryCard({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
-

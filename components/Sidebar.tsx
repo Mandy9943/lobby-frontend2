@@ -1,12 +1,15 @@
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { ChevronDown, Home, Search, Mail, Phone, Video } from "lucide-react"
-import Link from "next/link"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Button } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { ChevronDown, Home, Mail, Phone, Search, Video } from "lucide-react";
+import Link from "next/link";
 
 interface SidebarProps {
-  isOpen: boolean
-  onToggle: () => void
+  isOpen: boolean;
+  onToggle: () => void;
 }
 
 export function Sidebar({ isOpen, onToggle }: SidebarProps) {
@@ -18,7 +21,11 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
         onClick={onToggle}
         className="fixed top-4 left-4 z-50 text-primary hover:text-primary/90 dark:text-white dark:hover:text-white/90"
       >
-        <ChevronDown className={`h-5 w-5 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown
+          className={`h-5 w-5 transition-transform duration-200 ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
       </Button>
       <div
         className={`fixed top-0 left-0 h-full w-64 bg-white/80 dark:bg-slate-800/90 backdrop-blur-xl border-r border-white/20 dark:border-white/10 shadow-2xl transform transition-transform duration-300 ease-in-out ${
@@ -156,6 +163,5 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
         </div>
       </div>
     </>
-  )
+  );
 }
-

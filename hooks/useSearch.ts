@@ -266,7 +266,8 @@ const useSearch = () => {
     setSearchStatus("pending");
     setError(null);
     setPage(1);
-    const searchCategoryEnum = CATEGORY_MAPPING[selectedCategory];
+    const searchCategoryEnum =
+      CATEGORY_MAPPING[selectedCategory as keyof typeof CATEGORY_MAPPING];
     try {
       const { jobId: newJobId } = await createSearchLeadsJob(
         searchQuery,
