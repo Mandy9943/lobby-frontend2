@@ -1,11 +1,24 @@
-import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronDown, Home, Mail, Phone, Search, Video } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { navRoutes } from "@/utils/routes";
+import { ChevronDown, PanelRightClose } from "lucide-react";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+
+const ProfileDropdown = dynamic(() => import("./ProfileDropdown"));
 
 interface SidebarProps {
   isOpen: boolean;
@@ -13,155 +26,177 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isOpen, onToggle }: SidebarProps) {
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const { user } = useAuth();
+
   return (
-    <>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={onToggle}
-        className="fixed top-4 left-4 z-50 text-primary hover:text-primary/90 dark:text-white dark:hover:text-white/90"
-      >
-        <ChevronDown
-          className={`h-5 w-5 transition-transform duration-200 ${
-            isOpen ? "rotate-180" : ""
-          }`}
-        />
-      </Button>
-      <div
-        className={`fixed top-0 left-0 h-full w-64 bg-white/80 dark:bg-slate-800/90 backdrop-blur-xl border-r border-white/20 dark:border-white/10 shadow-2xl transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="p-6 pt-20">
-          <nav>
-            <ul className="space-y-4">
-              <li>
-                <Link
-                  href="/"
-                  className="flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200"
+    <div
+      className={` bg-gray-100 dark:bg-gray-900 h-screen fixed top-1 left-0 py-4 flex flex-col ${
+        isOpen ? "w-[260px]" : "w-[68px]"
+      }`}
+    >
+      <div className="flex items-center justify-between p-4">
+        {isOpen ? (
+          <h1 className="w-[142px]">
+            <Image
+              src="/statics/images/text-logo.png"
+              alt="Lobbyai"
+              width={774}
+              height={322}
+            />
+          </h1>
+        ) : (
+          <h1 onClick={onToggle} className="cursor-pointer">
+            <Image
+              src="/statics/images/logo.png"
+              alt="Lobbyai"
+              width={774}
+              height={322}
+            />
+          </h1>
+        )}
+
+        {isOpen ? (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <div
+                  onClick={onToggle}
+                  className="py-2 px-3 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-xl"
                 >
-                  <Home className="h-5 w-5" />
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/previous-searches"
-                  className="flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200"
-                >
-                  <Search className="h-5 w-5" />
-                  Searches
-                </Link>
-              </li>
-              <li>
-                <Collapsible>
-                  <CollapsibleTrigger className="flex items-center justify-between w-full text-left text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200">
-                    <span className="flex items-center gap-2">
-                      <Mail className="h-5 w-5" />
-                      Email Agent
-                    </span>
-                    <ChevronDown className="h-4 w-4" />
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="pl-7 mt-2 space-y-2">
-                    <Link
-                      href="/email-agent/create"
-                      className="block text-sm text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200"
-                    >
-                      Create an AI email agent
-                    </Link>
-                    <Link
-                      href="/email-agent/leads"
-                      className="block text-sm text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200"
-                    >
-                      All email leads
-                    </Link>
-                    <Link
-                      href="/email-agent/sent"
-                      className="block text-sm text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200"
-                    >
-                      Sent Emails
-                    </Link>
-                    <Link
-                      href="/email-agent/send"
-                      className="block text-sm text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200"
-                    >
-                      Send emails
-                    </Link>
-                    <Link
-                      href="/email-agent/responders"
-                      className="block text-sm text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200"
-                    >
-                      Responders
-                    </Link>
-                  </CollapsibleContent>
-                </Collapsible>
-              </li>
-              <li>
-                <Collapsible>
-                  <CollapsibleTrigger className="flex items-center justify-between w-full text-left text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200">
-                    <span className="flex items-center gap-2">
-                      <Phone className="h-5 w-5" />
-                      Voice Agent
-                    </span>
-                    <ChevronDown className="h-4 w-4" />
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="pl-7 mt-2 space-y-2">
-                    <Link
-                      href="/voice-agent/clone"
-                      className="block text-sm text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200"
-                    >
-                      Clone voice
-                    </Link>
-                    <Link
-                      href="/voice-agent/create"
-                      className="block text-sm text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200"
-                    >
-                      Create an AI agent
-                    </Link>
-                    <Link
-                      href="/voice-agent/numbers"
-                      className="block text-sm text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200"
-                    >
-                      All phone numbers
-                    </Link>
-                  </CollapsibleContent>
-                </Collapsible>
-              </li>
-              <li>
-                <Collapsible>
-                  <CollapsibleTrigger className="flex items-center justify-between w-full text-left text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200">
-                    <span className="flex items-center gap-2">
-                      <Video className="h-5 w-5" />
-                      Video Agent
-                    </span>
-                    <ChevronDown className="h-4 w-4" />
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="pl-7 mt-2 space-y-2">
-                    <Link
-                      href="/video-agent/clone"
-                      className="block text-sm text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200"
-                    >
-                      Clone yourself
-                    </Link>
-                    <Link
-                      href="/video-agent/creator"
-                      className="block text-sm text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200"
-                    >
-                      AI Creator
-                    </Link>
-                    <Link
-                      href="/video-agent/ads"
-                      className="block text-sm text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200"
-                    >
-                      AI Ads
-                    </Link>
-                  </CollapsibleContent>
-                </Collapsible>
-              </li>
-            </ul>
-          </nav>
-        </div>
+                  <PanelRightClose
+                    className={`h-5 w-5 transition-transform duration-200 ${
+                      isOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Close Sidebar</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : null}
       </div>
-    </>
+
+      {!isOpen ? (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <div
+                onClick={onToggle}
+                className="mx-auto aspect-square w-10 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-xl"
+              >
+                <PanelRightClose
+                  className={`h-5 w-5 transition-transform duration-200 ${
+                    isOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Close Sidebar</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ) : null}
+
+      <div className={`pt-10 flex-1 ${isOpen ? "p-3" : "p-2"}`}>
+        <nav>
+          <ul className={` ${isOpen ? "space-y-4" : "space-y-2"}`}>
+            {navRoutes.map((route) => {
+              if (route.subRoutes) {
+                return (
+                  <li
+                    key={route.href}
+                    className={`w-full flex ${
+                      isOpen ? "justify-start" : "justify-center"
+                    }`}
+                  >
+                    <Collapsible
+                      key={route.name}
+                      className="w-full flex flex-col items-center"
+                    >
+                      <CollapsibleTrigger
+                        className={`flex items-center text-left text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200  hover:bg-gray-200 dark:hover:bg-gray-800 rounded-xl ${
+                          isOpen
+                            ? "justify-between w-full py-2 px-3"
+                            : "justify-center aspect-square w-10 px-0 py-0"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2 ">
+                          {route.icon && <route.icon className="h-5 w-5" />}
+                          {isOpen ? route.name : null}
+                        </span>
+                        {isOpen ? <ChevronDown className="h-4 w-4" /> : null}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="pl-7 mt-2 space-y-2">
+                        {route.subRoutes.map((subRoute) => (
+                          <Link
+                            key={subRoute.href}
+                            href={subRoute.href!}
+                            className="block text-sm text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200"
+                          >
+                            {subRoute.name}
+                          </Link>
+                        ))}
+                      </CollapsibleContent>
+                    </Collapsible>
+                  </li>
+                );
+              }
+              if (!route.href) {
+                return null;
+              }
+              return (
+                <li
+                  key={route.href}
+                  className={`w-full flex ${
+                    isOpen ? "justify-start" : "justify-center"
+                  }`}
+                >
+                  <Link
+                    href={route.href}
+                    className={`flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200 p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-xl ${
+                      isOpen
+                        ? "justify-start"
+                        : "justify-center aspect-square w-10"
+                    }`}
+                  >
+                    {route.icon && <route.icon className="h-5 w-5" />}
+                    {isOpen ? route.name : null}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </div>
+
+      <div className={`pt-10 relative ${isOpen ? "p-3" : "p-2"}`}>
+        <button
+          className={`flex items-center gap-3 w-full py-2 px-3 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-xl ${
+            isOpen ? "justify-start" : "justify-center py-0 px-0 aspect-square"
+          }`}
+          onClick={() => setIsProfileOpen(!isProfileOpen)}
+        >
+          <Avatar className="w-8 h-8">
+            <AvatarImage
+              src={user?.image || "/statics/images/user-default.png"}
+            />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+
+          {isOpen ? <p className="text-gray-400">My Profile</p> : null}
+        </button>
+
+        {isProfileOpen ? (
+          <ProfileDropdown
+            isOpen={isProfileOpen}
+            onClose={() => setIsProfileOpen(false)}
+          />
+        ) : null}
+      </div>
+    </div>
   );
 }
