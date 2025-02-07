@@ -95,7 +95,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
               </div>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Close Sidebar</p>
+              <p>Open Sidebar</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -151,13 +151,15 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
               return (
                 <li
                   key={route.href}
-                  className={`w-full flex ${
-                    isOpen ? "justify-start" : "justify-center"
+                  className={` flex  ${
+                    isOpen
+                      ? "justify-start w-full"
+                      : "justify-center aspect-square w-10 mx-auto"
                   }`}
                 >
                   <Link
                     href={route.href}
-                    className={`flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200 p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-xl ${
+                    className={`flex w-full items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors duration-200 p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-xl ${
                       isOpen
                         ? "justify-start"
                         : "justify-center aspect-square w-10"
