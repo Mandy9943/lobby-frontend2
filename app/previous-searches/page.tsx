@@ -1,15 +1,45 @@
 "use client";
 
-import { SearchHistoryCard } from "@/components/SearchHistoryCard";
-import { getPreviousSearchLeads } from "@/services/leads-api/search-leads";
+import { useState } from "react";
 import useSWR from "swr";
 
+import { SearchHistoryCard } from "@/components/SearchHistoryCard";
+import CategoriesSelector from "@/components/categores-selector";
+import { getPreviousSearchLeads } from "@/services/leads-api/search-leads";
+
 export default function PreviousSearches() {
+  // Track the current category selected via the CategoriesSelector
+  const [selectedCategory, setSelectedCategory] = useState("Companies");
+
+  // Fetch all previous searches
   const {
     data: previousSearches,
     error,
     isLoading,
   } = useSWR("/api/search-leads/previous", getPreviousSearchLeads);
+
+  // Map the picker's category to the actual category used in the data
+  const mapCategory = (cat: string) => {
+    switch (cat) {
+      case "Companies":
+        return "COMPANY";
+      case "People":
+        return "PEOPLE";
+      case "Articles":
+        return "ARTICLE";
+      case "Research":
+        return "RESEARCH";
+      case "Other":
+        return "OTHER";
+      default:
+        return cat;
+    }
+  };
+
+  // Filter the previousSearches array by the selected category.
+  const filteredSearches = previousSearches?.filter(
+    (search) => search.category === mapCategory(selectedCategory)
+  );
 
   if (error) {
     return (
@@ -63,13 +93,12 @@ export default function PreviousSearches() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="container mx-auto px-4 py-8 max-w-4xl space-y-10">
+      {/* Render CategoriesSelector at the top of the page */}
+      <CategoriesSelector onCategoryChange={setSelectedCategory} />
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
-          Last 24 Hours
-        </h1>
         <div className="grid gap-4">
-          {previousSearches?.map((search) => (
+          {filteredSearches?.map((search) => (
             <SearchHistoryCard
               key={search.id}
               query={search.query}
