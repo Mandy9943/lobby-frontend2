@@ -13,18 +13,21 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { SearchLeadsResponse } from "@/types/search-leads.types";
+import { routesNames } from "@/utils/routes";
 import { motion } from "framer-motion";
 import { Share2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { EmailTemplateDialog } from "./EmailTemplateDialog";
 import { socialIcons } from "./socialIcons";
 
 interface ResultsTableProps {
   results: SearchLeadsResponse["data"];
-  onNewSearch: () => void;
 }
 
-export function ResultsTable({ results, onNewSearch }: ResultsTableProps) {
+export function ResultsTable({ results }: ResultsTableProps) {
+  const router = useRouter();
+
   // Sort results based on contact information priority
   const sortedResults = [...results].sort((a, b) => {
     const aHasEmail = a.email && a.email.length > 0;
@@ -39,13 +42,18 @@ export function ResultsTable({ results, onNewSearch }: ResultsTableProps) {
     return 0;
   });
 
+  const onNewSearch = () => {
+    router.push(routesNames.home);
+  };
+  console.log(results);
+
   return (
     <div className="flex-grow overflow-auto p-4 md:p-6 fade-in">
       <div className="max-w-7xl mx-auto space-y-6">
         <motion.h1
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-3xl font-bold text-primary dark:text-slate-100"
+          className="text-3xl text-center font-bold text-primary dark:text-slate-100"
         >
           {results.length
             ? `We found ${results.length} companies`

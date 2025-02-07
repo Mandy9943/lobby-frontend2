@@ -1,12 +1,12 @@
 "use client";
 
-import { ResultsTable } from "@/app/(Home)/components/ResultsTable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import useSearch from "@/hooks/useSearch";
+import { createSearchLeadsJob } from "@/services/leads-api/search-leads";
+import { CATEGORY_MAPPING } from "@/types/search-leads.types";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
@@ -17,7 +17,8 @@ import {
   Sparkles,
   Users2,
 } from "lucide-react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const MAX_UNAUTH_RESULTS = 5;
 const MAX_AUTH_RESULTS = 10;
@@ -25,45 +26,44 @@ const MAX_AUTH_RESULTS = 10;
 export default function ChatInterface() {
   const [isPro, setIsPro] = useState(false);
   const { user } = useAuth();
+  const router = useRouter();
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    "Companies"
+  );
 
-  const {
-    searchQuery,
-    setSearchQuery,
+  const [searchQuery, setSearchQuery] = useState("");
+  const [numResults, setNumResults] = useState(5);
 
-    searchStatus,
-    results,
+  const [searchStatus, setSearchStatus] = useState<
+    "idle" | "pending" | "done" | "failed"
+  >("idle");
 
-    numResults,
-    setNumResults,
-    selectedCategory,
-    setSelectedCategory,
+  useEffect(() => {
+    console.log("useEffect user");
 
-    handleSearch,
-    handleNewSearch,
-  } = useSearch();
-
-  const resultsSection = () => {
-    if (searchStatus === "idle") {
-      return null;
+    if (user) {
+      setNumResults(10);
     }
+  }, [user]);
 
-    if (searchStatus === "pending") {
-      return (
-        <div className="flex flex-col items-center justify-center py-12">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{
-              duration: 1,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            }}
-            className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full mb-4"
-          />
-          <p className="text-muted-foreground">Searching for leads...</p>
-        </div>
+  const onSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSearchStatus("pending");
+    const searchCategoryEnum =
+      CATEGORY_MAPPING[selectedCategory as keyof typeof CATEGORY_MAPPING];
+    try {
+      const { jobId } = await createSearchLeadsJob(
+        searchQuery,
+        1,
+        searchCategoryEnum,
+        numResults
       );
+      setSearchStatus("done");
+      router.push(`/search?q=${searchQuery}&jobId=${jobId}`);
+    } catch (err) {
+      console.error("Error starting search:", err);
+      setSearchStatus("failed");
     }
-    return <ResultsTable results={results} onNewSearch={handleNewSearch} />;
   };
 
   return (
@@ -191,7 +191,7 @@ export default function ChatInterface() {
                 Pro
               </span>
             </div>
-            <form onSubmit={handleSearch}>
+            <form onSubmit={onSearch}>
               <Input
                 type="text"
                 value={searchQuery}
@@ -249,8 +249,6 @@ export default function ChatInterface() {
           </Button>
         </motion.div>
       </div>
-
-      <div className="flex flex-col text-foreground">{resultsSection()}</div>
     </>
   );
 }
