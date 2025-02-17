@@ -1,13 +1,18 @@
 "use client";
 import useSearch from "@/hooks/useSearch";
+import { SearchCategory } from "@/types/search-leads.types";
 import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { ResultsTable } from "../(Home)/components/ResultsTable";
+import { ArticlesResultsTable } from "./components/ArticlesResultsTable";
+import { CompaniesResultsTable } from "./components/CompaniesResultsTable";
+import { PeopleResultsTable } from "./components/PeopleResultsTable";
+import ResearchResultsTable from "./components/ResearchResults/ResearchResults";
 const SearchPage = () => {
   const searchParams = useSearchParams();
   const jobId = searchParams.get("jobId");
-
+  const category = searchParams.get("category");
+  const query = searchParams.get("q");
   const { statusData } = useSearch(jobId || "");
 
   if (statusData?.status === "pending") {
@@ -26,7 +31,24 @@ const SearchPage = () => {
       </div>
     );
   }
-  return <ResultsTable results={statusData?.result?.data || []} />;
+
+  if (category === SearchCategory.COMPANY) {
+    return <CompaniesResultsTable results={statusData?.result?.data || []} />;
+  }
+
+  if (category === SearchCategory.PEOPLE) {
+    return <PeopleResultsTable results={statusData?.result?.data || []} />;
+  }
+
+  if (category === SearchCategory.ARTICLES) {
+    return <ArticlesResultsTable results={statusData?.result?.data || []} />;
+  }
+
+  if (category === SearchCategory.RESEARCH) {
+    return <ResearchResultsTable query={query || ""} />;
+  }
+
+  return <CompaniesResultsTable results={statusData?.result?.data || []} />;
 };
 
 const page = () => {

@@ -42,14 +42,22 @@ export default function ChatInterface() {
     const searchCategoryEnum =
       CATEGORY_MAPPING[selectedCategory as keyof typeof CATEGORY_MAPPING];
     try {
-      const { jobId } = await createSearchLeadsJob(
-        searchQuery,
-        1,
-        searchCategoryEnum,
-        numResults
-      );
-      setSearchStatus("done");
-      router.push(`/search?q=${searchQuery}&jobId=${jobId}`);
+      if (selectedCategory !== "Research") {
+        const { jobId } = await createSearchLeadsJob(
+          searchQuery,
+          1,
+          searchCategoryEnum,
+          numResults
+        );
+        setSearchStatus("done");
+        router.push(
+          `/search?q=${searchQuery}&jobId=${jobId}&category=${searchCategoryEnum}`
+        );
+      } else {
+        setSearchStatus("done");
+
+        router.push(`/search?q=${searchQuery}&category=${searchCategoryEnum}`);
+      }
     } catch (err) {
       console.error("Error starting search:", err);
       setSearchStatus("failed");

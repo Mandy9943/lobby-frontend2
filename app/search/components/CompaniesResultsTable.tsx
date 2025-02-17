@@ -12,20 +12,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { SearchLeadsResponse } from "@/types/search-leads.types";
+import {
+  SearchCompanyResult,
+  SearchLeadsResponse,
+} from "@/types/search-leads.types";
 import { routesNames } from "@/utils/routes";
 import { motion } from "framer-motion";
 import { Share2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { EmailTemplateDialog } from "./EmailTemplateDialog";
-import { socialIcons } from "./socialIcons";
+import { EmailTemplateDialog } from "../../(Home)/components/EmailTemplateDialog";
+import { socialIcons } from "../../(Home)/components/socialIcons";
 
 interface ResultsTableProps {
-  results: SearchLeadsResponse["data"];
+  results: SearchLeadsResponse<SearchCompanyResult>["data"];
 }
 
-export function ResultsTable({ results }: ResultsTableProps) {
+export function CompaniesResultsTable({ results }: ResultsTableProps) {
   const router = useRouter();
 
   // Sort results based on contact information priority
@@ -127,7 +130,7 @@ export function ResultsTable({ results }: ResultsTableProps) {
 
 interface ResultRowProps {
   index: number;
-  result: SearchLeadsResponse["data"][0];
+  result: SearchLeadsResponse<SearchCompanyResult>["data"][0];
 }
 
 function ResultRow({ index, result }: ResultRowProps) {
@@ -154,7 +157,7 @@ function ResultRow({ index, result }: ResultRowProps) {
         </TableCell>
         <TableCell className="max-w-[200px]">
           <a
-            href={`https://${result.domain}`}
+            href={`${result.domain}`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-400 hover:underline truncate block"

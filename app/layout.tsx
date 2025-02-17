@@ -1,11 +1,10 @@
 import Layout from "@/components/Layout";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/toaster";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import localFont from "next/font/local";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
-
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -40,7 +39,7 @@ export default function RootLayout({
         >
           <SpeedInsights />
           <Analytics />
-          <Toaster />
+          <Toaster position="top-right" reverseOrder={false} />
           <Layout>{children}</Layout>
         </ThemeProvider>
       </body>

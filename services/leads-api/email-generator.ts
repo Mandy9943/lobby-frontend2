@@ -1,4 +1,4 @@
-import { ScrapeResult } from "@/types/search-leads.types";
+import { SearchCompanyResult } from "@/types/search-leads.types";
 import leadsApi from ".";
 
 interface GenerateEmailResponse {
@@ -13,7 +13,7 @@ interface GenerateMultipleEmailsResponse {
 
 export const generateSingleEmail = async (
   projectId: string,
-  lead: ScrapeResult
+  lead: SearchCompanyResult
 ) => {
   const res = await leadsApi.post<GenerateEmailResponse>(
     `/email-generator/single/${projectId}`,
@@ -26,7 +26,7 @@ export const generateSingleEmail = async (
 
 export const generateMultipleEmails = async (
   projectId: string,
-  leads: ScrapeResult[]
+  leads: SearchCompanyResult[]
 ) => {
   const res = await leadsApi.post<GenerateMultipleEmailsResponse>(
     `/email-generator/batch/${projectId}`,

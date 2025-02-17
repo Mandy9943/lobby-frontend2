@@ -30,7 +30,7 @@ type SocialPatterns =
 
 // Exclude 'email' from social platforms since it's handled separately
 
-export interface ScrapeResult {
+export interface SearchCompanyResult {
   domain: string;
   title?: string;
   description?: string;
@@ -40,18 +40,25 @@ export interface ScrapeResult {
   emailTemplate?: string;
 }
 
-export interface SearchLeadsResponse {
+export interface SearchPeopleResult {
+  url: string;
+  title: string;
+  text: string;
+  author: string;
+}
+
+export interface SearchLeadsResponse<T> {
   message?: string | undefined;
   query: string;
-  data: ScrapeResult[];
+  data: T[];
   totalDomains: number;
   successfulCrawls: number;
   totalTimeMs: number;
 }
 
-export interface SearchJobResponse {
+export interface SearchJobResponse<T> {
   query: string;
-  result: SearchLeadsResponse | null;
+  result: SearchLeadsResponse<T> | null;
   id: string;
   status: string;
   createdAt: Date;
